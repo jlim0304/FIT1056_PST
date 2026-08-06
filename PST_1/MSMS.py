@@ -71,3 +71,37 @@ def find_teachers(term):
     else:
         for mteacher in matching_teachers:
             print(f"  ID: {mteacher.id}, Name: {mteacher.name}, Speciality: {mteacher.speciality}")
+
+# --- Front Desk Functions --- fragment 3
+def find_student_by_id(student_id):
+    """A new helper to find one student by their exact ID."""
+    for student in student_db: # loops through student_db. If a student's ID matches student_id, returns the student object.
+        if student.id == student_id:
+            return student
+    return None # if the loop finishes without finding a match, return None.
+
+def front_desk_register(name, instrument):
+    """High-level function to register a new student and enrol them."""
+    global next_student_id
+    new_student = Student(next_student_id, name) # creates a new Student object, adds it to student_db, and increments the ID.
+    student_db.append(new_student)
+    next_student_id += 1
+    
+    # Immediately call front_desk_enrol() using the new student's ID and the provided instrument.
+    front_desk_enrol(new_student.id, instrument)
+    print(f"Front Desk: Successfully registered '{name}' and enrolled them in '{instrument}'.")
+
+def front_desk_enrol(student_id, instrument):
+    """High-level function to enrol an existing student in a course."""
+    student = find_student_by_id(student_id)
+    if student: # if the student is found, append the instrument to their 'enrolled_in' list.
+        student.enrolled_in.append(instrument)
+        print(f"Front Desk: Enrolled student {student_id} in '{instrument}'.")
+    else:
+        print(f"Error: Student ID {student_id} not found.") # if the student is not found, print an error message
+
+def front_desk_lookup(term):
+    """High-level function to search everything."""
+    print(f"\n--- Performing lookup for '{term}' ---")
+    find_students(term) # calling both previous helper functions
+    find_teachers(term)
