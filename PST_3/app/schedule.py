@@ -63,6 +63,16 @@ class ScheduleManager:
                 self.next_lesson_id = data.get("next_lesson_id", 1)
         except FileNotFoundError:
             print("Data file not found. Starting with a clean state.")
+            data = {"students": [],
+                    "teachers": [],
+                    "courses": [],
+                    "attendance": [],
+                    "next_student_id": 1,
+                    "next_teacher_id": 1,
+                    "next_course_id": 101,
+                    "next_lesson_id": 1 }
+            with open(self.data_path, 'w') as f:
+                json.dump(data, f, indent=4)
     
     def _save_data(self):
         """Converts object lists back to dictionaries and saves to JSON."""
@@ -115,3 +125,20 @@ class ScheduleManager:
         for course in self.courses: 
             if course.id == course_id: 
                 return course
+
+    def get_daily_roster(self, day):
+        """Returns all lessons scheduled for a given day."""
+        roster = []
+        for course in self.courses:
+            for lesson in course.lessons:
+                if lesson["day"].lower() == day.lower():
+                    roster.append({
+                        "course_id": course.id,
+                        "course_name": course.name,
+                        "instrument": course.instrument,
+                        "teacher_id": course.teacher_id,
+                        "lesson_id": lesson["lesson_id"],
+                        "start_time": lesson["start_time"],
+                        "room": lesson["room"]
+                    })
+        return roster
