@@ -9,7 +9,16 @@ def show_roster_page(manager):
     # --- View Roster Section (remains the same) ---
     day = st.selectbox("Select a day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
     # ... (code to display the dataframe) ...
-    
+    roster = manager.get_daily_roster(day)
+    if roster:
+        roster_df = pd.DataFrame(roster)
+        roster_df = roster_df[["course_id","course_name","instrument","teacher_id","lesson_id","start_time","room"]]
+        roster_df.columns = ["Course ID","Course","Instrument","Teacher ID","Lesson ID","Start Time","Room"]
+
+        st.dataframe(roster_df)
+    else:
+        st.info(f"No lessons are scheduled for {day}.")
+
     # --- Student Check-in Section (now works correctly) ---
     st.subheader("Student Check-in")
     with st.form("check_in_form"):

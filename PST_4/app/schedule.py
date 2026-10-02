@@ -142,3 +142,26 @@ class ScheduleManager:
                         "room": lesson["room"]
                     })
         return roster
+
+    def register_new_student(self, name, course_name):
+        """Registers a new student and enrolls them in their first course."""
+        course = None
+        for c in self.courses:
+            if c.name.lower() == course_name.strip().lower():
+                course = c
+                break
+
+        if not course:
+            return None
+
+        new_student = StudentUser(self.next_student_id, name)
+
+        new_student.enrolled_course_ids = [course.id]
+        course.enrolled_student_ids.append(new_student.id)
+
+        self.students.append(new_student)
+
+        self.next_student_id += 1
+
+        self._save_data()
+        return new_student
