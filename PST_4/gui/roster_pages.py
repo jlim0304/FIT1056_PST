@@ -11,8 +11,7 @@ def show_roster_page(manager):
     # ... (code to display the dataframe) ...
     roster = manager.get_daily_roster(day)
     if roster:
-        roster_df = pd.DataFrame(roster)
-        roster_df = roster_df[["course_id","course_name","instrument","teacher_id","lesson_id","start_time","room"]]
+        roster_df = pd.DataFrame(roster)[["course_id","course_name","instrument","teacher_id","lesson_id","start_time","room"]]
         roster_df.columns = ["Course ID","Course","Instrument","Teacher ID","Lesson ID","Start Time","Room"]
 
         st.dataframe(roster_df)
